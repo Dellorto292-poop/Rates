@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "provider": "ECB",
+  "requestedDate": "2026-06-24",
+  "rateDate": "2026-06-24",
+  "fetchedAt": "2026-09-08T13:46:22.835Z",
+  "base": "USD",
+  "rates": {
+    "EUR": 0.8818342151675486,
+    "USD": 1
+  }
+}

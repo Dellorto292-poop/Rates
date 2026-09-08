@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "provider": "NBKR",
+  "requestedDate": "2026-06-04",
+  "rateDate": "2026-06-04",
+  "fetchedAt": "2026-09-08T13:46:39.797Z",
+  "base": "USD",
+  "rates": {
+    "EUR": 0.8614380153729008,
+    "KGS": 87.45,
+    "USD": 1
+  }
+}
