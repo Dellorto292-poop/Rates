@@ -1,0 +1,19 @@
+{
+  "name": "rates",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "collect": "node src/cli.mjs",
+    "collect:history": "node src/history-cli.mjs",
+    "prepare:public": "node src/publish-cli.mjs",
+    "update": "node src/update-cli.mjs",
+    "release": "node src/release-cli.mjs"
+  },
+  "dependencies": {
+    "cheerio": "1.2.0",
+    "fast-xml-parser": "5.11.1"
+  }
+}

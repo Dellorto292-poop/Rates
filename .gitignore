@@ -1,0 +1,9 @@
+node_modules/
+data/
+*.tmp
+state/
+public/
+checkpoint/
+checkpoint-seed/
+release-*/
+.deploy-state/
