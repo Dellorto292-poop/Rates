@@ -68,7 +68,7 @@ test('repair revisits a failed date outside the recent window and skips healthy 
     for (const id of Object.keys(PROVIDERS)) {
       for (const folder of ['status', 'banks']) await mkdir(path.join(outputDir, folder, id), { recursive: true });
       for (let day = endDate; day >= historyStart(date); day = shiftDate(day, -1)) {
-        const saved = { provider: id, requestedDate: day, rateDate: day, fetchedAt: date + 'T04:00:00Z', ok: true };
+        const saved = { provider: id, coverageVersion: PROVIDERS[id].coverageVersion, requestedDate: day, rateDate: day, fetchedAt: date + 'T04:00:00Z', ok: true };
         await writeFile(path.join(outputDir, 'banks', id, day + '.json'), JSON.stringify(saved));
         // A previous valid snapshot remains, but the latest attempt failed.
         const status = id === 'NBRB' && day === endDate ? { ...saved, ok: false } : saved;

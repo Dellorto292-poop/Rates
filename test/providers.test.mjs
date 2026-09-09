@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseProvider, fetchProvider } from '../src/providers.mjs';
+import { parseProvider, fetchProvider, NBKR_CURRENCIES } from '../src/providers.mjs';
 
 const date = '2026-09-08';
 const check = (id, payload, expected, context) => {
@@ -39,8 +39,12 @@ test('invalid schemas and XML entities cannot become successful rates', () => {
 });
 test('NBKR archive requests pin both range ends and separate bank currency IDs', async () => {
   const requests=[];
-  await fetchProvider('NBKR',date,{request:async url=>{requests.push(new URL(url));return {url,text:'<tr></tr><table><tr><td class="stat-center">08.09.2026</td><td class="stat-right">87,45</td></tr></table>'}}});
-  assert.deepEqual(requests.map(u=>u.searchParams.get('valuta_id')),['15','20']);
+  await fetchProvider('NBKR',date,{request:async url=>{
+    const parsed = new URL(url); requests.push(parsed);
+    const [code, id, nominal = 1] = NBKR_CURRENCIES.find(row => String(row[1]) === parsed.searchParams.get('valuta_id'));
+    return {url,text:`<select name="valuta_id"><option value="${id}">${nominal} ${code}</option></select><table><tr><td class="stat-center">08.09.2026</td><td class="stat-right">87,45</td></tr></table>`};
+  }});
+  assert.deepEqual(requests.map(u=>u.searchParams.get('valuta_id')), NBKR_CURRENCIES.map(row => String(row[1])));
   assert.ok(requests.every(u=>u.searchParams.get('end_day')==='08'&&u.searchParams.get('end_year')==='2026'));
 });
 test('empty daily publications walk backwards but network errors do not become holidays', async () => {

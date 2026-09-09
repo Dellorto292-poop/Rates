@@ -14,6 +14,7 @@ export async function collectHistory({ date, endDate = date, outputDir, now = ()
   if (endDate < startDate || endDate > date) throw new Error('History end date must be within the archive window');
   const days = Math.round((Date.parse(date) - Date.parse(startDate)) / 86400000);
   const archives = new Map();
+  const sharedClient = createHttpClient();
   // Range sources are downloaded once; failed range requests also stay failed for this run.
   async function fetchBank(id, day, client) {
     if (!['BOM', 'ECB', 'NBKR'].includes(id)) return fetchProviderImpl(id, day, client);
@@ -29,12 +30,12 @@ export async function collectHistory({ date, endDate = date, outputDir, now = ()
         const status = JSON.parse(await readFile(path.join(outputDir, 'status', id, day + '.json'), 'utf8'));
         const snapshot = JSON.parse(await readFile(path.join(outputDir, 'banks', id, day + '.json'), 'utf8'));
         if (status.ok && status.provider === id && status.requestedDate === day && snapshot.provider === id &&
-            snapshot.requestedDate === day && snapshot.fetchedAt === status.fetchedAt && snapshot.rateDate === status.rateDate) continue;
+            snapshot.requestedDate === day && (snapshot.coverageVersion || 1) >= PROVIDERS[id].coverageVersion && snapshot.fetchedAt === status.fetchedAt && snapshot.rateDate === status.rateDate) continue;
       } catch (error) { if (error.code !== 'ENOENT') throw error; }
       missing.push(id);
     }
     if (!missing.length) continue;
-    const result = await collectDay({ date: day, providers: missing, outputDir, now, client: createHttpClient(), fetchBank,
+    const result = await collectDay({ date: day, providers: missing, outputDir, now, client: sharedClient, fetchBank,
       onResult: row => onResult({ requestedDate: day, ...row }) });
     if (result.results.some(row => !row.ok)) failed = true;
     await sleep(250);
