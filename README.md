@@ -19,15 +19,17 @@ An unavailable bank/date returns `ok: false` without rates. A missing currency i
 | Bank | Official source | Collection |
 | --- | --- | --- |
 | CBAR | [Dated XML](https://www.cbar.az/currencies/09.09.2026.xml) | Currency attributes, nominal, actual XML effective date; holiday requests may return an earlier publication. No browser CORS is required by the server collector. |
-| CBA | [SOAP API](https://api.cba.am/exchangerates.asmx) | All published currencies, amount/nominal and response date. |
+| CBA | [SOAP API](https://api.cba.am/exchangerates.asmx) | Working application currencies, amount/nominal and response date. |
 | NBRB | [API documentation](https://www.nb-rb.by/apihelp/exrates.htm) | Daily (`periodicity=0`) and monthly (`periodicity=1`) series. Monthly values are requested on the first of the applicable month. |
-| NBG | [Dated API](https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/?date=2026-09-09) | All published currencies and their quantities. |
-| NBK | [Dated XML](https://nationalbank.kz/rss/get_rates.cfm?fdate=09.09.2026) | All published currencies and nominals. |
-| NBKR | [Official archive and frequency rules](https://www.nbkr.kg/index1.jsp?item=1562&lang=ENG&valuta_id=15) | USD, EUR, RUB, KZT, CNY daily; other current quoted currencies weekly. Historical bank IDs and nominals are explicit in `src/providers.mjs`. Retired BYR and obsolete archive IDs are excluded. |
-| ECB | [SDMX API](https://data-api.ecb.europa.eu/service/data/EXR/D..EUR.SP00.A?startPeriod=2026-09-08&endPeriod=2026-09-08&format=jsondata) | All daily reference currencies; native EUR is added as the pivot. |
-| BOM | [Official archive](https://www.mongolbank.mn/en/currency-rate-movement) | All published current currency fields in the bounded date window. |
-| CBR | [Dated XML](https://www.cbr.ru/scripts/XML_daily.asp?date_req=09/09/2026) | All published currencies; precise per-unit field where supplied. |
-| CBU | [Dated API](https://cbu.uz/en/arkhiv-kursov-valyut/json/all/2026-09-09/) | All published currencies and nominals. |
+| NBG | [Dated API](https://nbg.gov.ge/gw/api/ct/monetarypolicy/currencies/?date=2026-09-09) | Working application currencies and their quantities. |
+| NBK | [Dated XML](https://nationalbank.kz/rss/get_rates.cfm?fdate=09.09.2026) | Working application currencies and nominals. |
+| NBKR | [Official archive and frequency rules](https://www.nbkr.kg/index1.jsp?item=1562&lang=ENG&valuta_id=15) | USD, EUR, RUB, KZT, CNY daily; other current quoted currencies weekly. Only the ten required foreign series are fetched. Historical bank IDs and nominals are explicit in `src/providers.mjs`. Retired BYR and obsolete archive IDs are excluded. |
+| ECB | [SDMX API](https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A?startPeriod=2026-09-08&endPeriod=2026-09-08&format=jsondata) | USD reference series and native EUR; other ECB currencies are outside the application scope. |
+| BOM | [Official archive](https://www.mongolbank.mn/en/currency-rate-movement) | Working application currency fields in the bounded date window. |
+| CBR | [Dated XML](https://www.cbr.ru/scripts/XML_daily.asp?date_req=09/09/2026) | Working application currencies; precise per-unit field where supplied. |
+| CBU | [Dated API](https://cbu.uz/en/arkhiv-kursov-valyut/json/all/2026-09-09/) | Working application currencies and nominals. |
+
+Only application currencies are collected: USD, AMD, AZN, BYN, EUR, GEL, KGS, KZT, MNT, RUB, UZS. This is a bank-selection expansion, not a global currency catalog. Sources may return a larger table, but unrelated currencies are discarded before storage/publication.
 
 Different banks publish different currency lists and may publish different rates. The resulting bank/currency coverage is intentionally uneven. Selecting a bank does not make absent currencies available. Precious metals are excluded where identified by the adapters; SDR is normalized to the standard `XDR` code.
 

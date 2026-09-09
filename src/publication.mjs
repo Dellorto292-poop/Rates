@@ -2,7 +2,7 @@ import { cleanRateMetadata } from './state-contract.mjs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { atomicJson } from './collect.mjs';
-import { PROVIDERS } from './providers.mjs';
+import { PROVIDERS, SUPPORTED_CURRENCIES } from './providers.mjs';
 import { isoDate, shiftDate, RateError } from './model.mjs';
 
 export function historyStart(date) {
@@ -45,6 +45,12 @@ export function publicEnvelope(id, date, status, snapshot, version = 1) {
     return { ...failure, ok: true, rateDate: snapshot.rateDate, rates };
   }
   if (version !== 2) throw new Error('Unsupported publication version');
+  for (const code of Object.keys(rates)) {
+    if (SUPPORTED_CURRENCIES.includes(code)) continue;
+    delete rates[code];
+    delete metadata.rateDates[code];
+    delete metadata.frequencies[code];
+  }
   return { ...failure, ok: true, rateDate: snapshot.rateDate, rates, ...metadata };
 }
 

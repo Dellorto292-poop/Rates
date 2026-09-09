@@ -9,7 +9,7 @@ export const PROVIDERS = Object.freeze({
   NBG: { id: 'NBG', pivot: 'GEL', required: ['GEL', 'EUR'] },
   NBK: { id: 'NBK', pivot: 'KZT', required: ['KZT', 'EUR'] },
   NBKR: { id: 'NBKR', coverageVersion: 2, pivot: 'KGS', required: ['KGS', 'EUR'] },
-  ECB: { id: 'ECB', coverageVersion: 2, pivot: 'EUR', required: ['EUR'], direction: 'foreign-per-pivot' },
+  ECB: { id: 'ECB', pivot: 'EUR', required: ['EUR'], direction: 'foreign-per-pivot' },
   BOM: { id: 'BOM', pivot: 'MNT', required: ['MNT', 'EUR'] },
   CBR: { id: 'CBR', pivot: 'RUB', required: ['RUB', 'EUR'] },
   CBU: { id: 'CBU', pivot: 'UZS', required: ['UZS', 'AZN', 'EUR'] }
@@ -43,15 +43,10 @@ function localDate(date, separator = '.') { return date.slice(8) + separator + d
 
 // Bank-owned archive IDs and current nominal. Reviewed 2026-09-09.
 // Retired currencies/redenominated IDs (including BYR) are intentionally excluded.
+export const SUPPORTED_CURRENCIES = Object.freeze(['USD','AMD','AZN','BYN','EUR','GEL','KGS','KZT','MNT','RUB','UZS']);
 export const NBKR_CURRENCIES = Object.freeze([
-  ['USD',15],['EUR',20],['RUB',44],['KZT',40],['CNY',24],
-  ['GBP',17],['DKK',19],['INR',21],['CAD',23],['KRW',25],['NOK',28],
-  ['XDR',30],['SEK',34],['CHF',35],['JPY',36,10],['AMD',38,10],['MDL',43],
-  ['TJS',45],['UAH',47],['KWD',50],['HUF',51,10],['CZK',52],['NZD',53],
-  ['PKR',55],['AUD',56],['TRY',57],['AZN',82],['SGD',86],['AFN',99],
-  ['BRL',101],['GEL',102],['AED',103],['MYR',105],['MNT',106],['TWD',107],
-  ['TMT',108],['PLN',109],['SAR',139],['BYN',160],['OMR',180],['HKD',182],
-  ['IDR',184,10],['IRR',199,100],['UZS',200,10],['BHD',202],['VND',204,10],['THB',206]
+  ['USD',15],['EUR',20],['RUB',44],['KZT',40],
+  ['AMD',38,10],['AZN',82],['GEL',102],['MNT',106],['BYN',160],['UZS',200,10]
 ].map(row => Object.freeze(row)));
 const NBKR_DAILY = new Set(['USD','EUR','RUB','KZT','CNY']);
 
@@ -153,6 +148,7 @@ export async function fetchProvider(id, date, client, { lookbackDays = 14 } = {}
   const startDate = shiftDate(date, -lookbackDays);
   const sources = [];
   const responses = [];
+  const finish = observations => ({ observations: observations.filter(row => SUPPORTED_CURRENCIES.includes(row.currency)), sources, responses });
   async function get(url, options = {}) {
     const result = await client.request(url, options);
     sources.push(result.url);
@@ -163,13 +159,13 @@ export async function fetchProvider(id, date, client, { lookbackDays = 14 } = {}
     const text = await get('https://www.mongolbank.mn/en/currency-rate-movement/data', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ startDate, endDate: date })
     });
-    return { observations: parseProvider(id, text, { startDate, date }), sources, responses };
+    return finish(parseProvider(id, text, { startDate, date }));
   }
   if (id === 'ECB') {
-    // All reference currencies, normalized through the same publication's USD leg.
-    const url = new URL('https://data-api.ecb.europa.eu/service/data/EXR/D..EUR.SP00.A');
+    // The application's only ECB-supported currencies are USD and native EUR.
+    const url = new URL('https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A');
     url.search = new URLSearchParams({ startPeriod: startDate, endPeriod: date, format: 'jsondata' });
-    return { observations: parseProvider(id, await get(url.href)), sources, responses };
+    return finish(parseProvider(id, await get(url.href)));
   }
   if (id === 'NBKR') {
     const observations = [];
@@ -183,7 +179,7 @@ export async function fetchProvider(id, date, client, { lookbackDays = 14 } = {}
       });
       observations.push(...parseProvider(id, await get(url.href), { currency, bankId, nominal }));
     }
-    return { observations, sources, responses };
+    return finish(observations);
   }
   // Some daily APIs return no data on non-publication days. Search backwards,
   // never forwards; transport/schema failures must not masquerade as a holiday.
@@ -219,7 +215,7 @@ export async function fetchProvider(id, date, client, { lookbackDays = 14 } = {}
           observations.push(...anchor, ...monthly.map(row => ({ ...row, frequency: 'monthly' })));
         }
       }
-      return { observations, sources, responses };
+      return finish(observations);
     }
   }
   throw new RateError('no-publication', 'No bank publication in configured lookback window');
