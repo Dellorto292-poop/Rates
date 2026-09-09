@@ -6,10 +6,12 @@ import { historyStart } from './publication.mjs';
 import { isoDate, shiftDate } from './model.mjs';
 import { createHttpClient } from './http.mjs';
 
-export async function collectHistory({ date, outputDir, now = () => new Date().toISOString(), fetchProviderImpl = fetchProvider, collectDay = collect, sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), onResult = () => {} }) {
+export async function collectHistory({ date, endDate = date, outputDir, now = () => new Date().toISOString(), fetchProviderImpl = fetchProvider, collectDay = collect, sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), onResult = () => {} }) {
   date = isoDate(date);
+  endDate = isoDate(endDate);
   if (date > now().slice(0, 10)) throw new Error('Future dates are not supported');
   const startDate = historyStart(date);
+  if (endDate < startDate || endDate > date) throw new Error('History end date must be within the archive window');
   const days = Math.round((Date.parse(date) - Date.parse(startDate)) / 86400000);
   const archives = new Map();
   // Range sources are downloaded once; failed range requests also stay failed for this run.
@@ -20,7 +22,7 @@ export async function collectHistory({ date, outputDir, now = () => new Date().t
     return { ...archive, observations: archive.observations.filter(row => row.date <= day && row.date >= shiftDate(day, -14)) };
   }
   let failed = false;
-  for (let day = date; day >= startDate; day = shiftDate(day, -1)) {
+  for (let day = endDate; day >= startDate; day = shiftDate(day, -1)) {
     const missing = [];
     for (const id of Object.keys(PROVIDERS)) {
       try {
@@ -37,5 +39,5 @@ export async function collectHistory({ date, outputDir, now = () => new Date().t
     if (result.results.some(row => !row.ok)) failed = true;
     await sleep(250);
   }
-  return { startDate, endDate: date, ok: !failed };
+  return { startDate, endDate, ok: !failed };
 }
