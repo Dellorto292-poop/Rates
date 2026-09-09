@@ -44,3 +44,11 @@ test('NBKR nominal scales and altered archive labels cannot silently change amou
  assert.equal(parseProvider('NBKR',html,{currency:'AMD',bankId:38,nominal:10})[0].unitRate,.24);
  assert.throws(()=>parseProvider('NBKR',html,{currency:'AMD',bankId:38,nominal:1}),{code:'invalid-nominal'});
 });
+test('collection and v2 publication are limited to working application currencies',async()=>{
+ const r=await fetchProvider('CBU',date,{request:async url=>({url,text:JSON.stringify(['USD','EUR','UZS','AZN','GBP'].map(Ccy=>({Date:date,Ccy,Rate:'1',Nominal:'1'})))})});
+ assert.equal(r.observations.some(row=>row.currency==='GBP'),false);
+ const s=makeSnapshot(PROVIDERS.CBU,date,['USD','EUR','UZS','AZN','GBP'].map(c=>o(date,c,1)),[],at);
+ const status={schemaVersion:1,provider:'CBU',requestedDate:date,attemptedAt:at,fetchedAt:at,rateDate:date,ok:true};
+ assert.equal(publicEnvelope('CBU',date,status,s,1).rates.GBP,1);
+ const v2=publicEnvelope('CBU',date,status,s,2); assert.equal(v2.rates.GBP,undefined); assert.equal(v2.rateDates.GBP,undefined);
+});
