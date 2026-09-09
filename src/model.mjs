@@ -73,10 +73,28 @@ export function makeSnapshot(provider, requestedDate, observations, sources, fet
       rates[code] = rate;
     }
     rates.USD = 1;
+    const rateDates = Object.fromEntries(Object.keys(rates).map(code => [code, rateDate]));
+    const frequencies = Object.fromEntries(Object.keys(rates).map(code => [code, group.get(code)?.frequency || 'daily']));
+    // Extend only explicitly periodic series, never carry forward a missing daily quote.
+    // Both conversion legs still come from exactly the periodic publication's date.
+    for (const periodicDate of [...groups.keys()].sort().reverse()) {
+      const periodic = groups.get(periodicDate);
+      if (!periodic.has('USD')) continue;
+      for (const [code, item] of periodic) {
+        if (Object.hasOwn(rates, code) || !['weekly', 'monthly'].includes(item.frequency)) continue;
+        if (item.frequency === 'weekly' && periodicDate < shiftDate(date, -6)) continue;
+        if (item.frequency === 'monthly' && periodicDate !== date.slice(0, 7) + '-01') continue;
+        const rate = provider.direction === 'foreign-per-pivot' ? item.unitRate / periodic.get('USD').unitRate : periodic.get('USD').unitRate / item.unitRate;
+        if (!Number.isFinite(rate) || rate <= 0) throw new RateError('invalid-cross-rate', 'Invalid periodic cross rate');
+        rates[code] = rate;
+        rateDates[code] = periodicDate;
+        frequencies[code] = item.frequency;
+      }
+    }
     return {
       schemaVersion: 1, provider: provider.id, requestedDate: date, rateDate,
       fetchedAt, base: 'USD', pivot: provider.pivot, direction: provider.direction,
-      rates, observations: [...group.values()].sort((a, b) => a.currency.localeCompare(b.currency)),
+      coverageVersion: provider.coverageVersion || 1, rates, rateDates, frequencies, observations: [...group.values()].sort((a, b) => a.currency.localeCompare(b.currency)),
       sources: [...new Set(sources)]
     };
   }

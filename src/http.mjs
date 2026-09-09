@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { RateError } from './model.mjs';
 
 export const BANK_HOSTS = new Set([
-  'api.cba.am', 'api.nbrb.by', 'nbg.gov.ge', 'nationalbank.kz',
+  'www.cbar.az', 'api.cba.am', 'api.nbrb.by', 'nbg.gov.ge', 'nationalbank.kz',
   'www.nbkr.kg', 'data-api.ecb.europa.eu', 'www.mongolbank.mn', 'www.cbr.ru', 'cbu.uz'
 ]);
 

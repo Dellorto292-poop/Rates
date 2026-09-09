@@ -1,7 +1,8 @@
+import { cleanRateMetadata } from './state-contract.mjs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { atomicJson } from './collect.mjs';
-import { PROVIDERS } from './providers.mjs';
+import { PROVIDERS, SUPPORTED_CURRENCIES } from './providers.mjs';
 import { isoDate, shiftDate, RateError } from './model.mjs';
 
 export function historyStart(date) {
@@ -19,12 +20,12 @@ async function readJson(file) {
   catch (error) { if (error.code === 'ENOENT') return null; throw error; }
 }
 
-export function publicEnvelope(id, date, status, snapshot) {
+export function publicEnvelope(id, date, status, snapshot, version = 1) {
   if (!Object.hasOwn(PROVIDERS, id)) throw new RateError('unsupported-provider', 'Unknown bank');
   isoDate(date);
   const validStatus = status?.schemaVersion === 1 && status.provider === id && status.requestedDate === date;
   const checkedAt = validStatus ? status.attemptedAt : null;
-  const failure = { schemaVersion: 1, provider: id, requestedDate: date, checkedAt, ok: false };
+  const failure = { schemaVersion: version, provider: id, requestedDate: date, checkedAt, ok: false };
   if (!validStatus || status.ok !== true) return failure;
   if (!snapshot || snapshot.schemaVersion !== 1 || snapshot.provider !== id || snapshot.requestedDate !== date || snapshot.base !== 'USD' ||
       snapshot.rateDate !== status.rateDate || snapshot.fetchedAt !== status.fetchedAt || isoDate(snapshot.rateDate) > date ||
@@ -37,7 +38,20 @@ export function publicEnvelope(id, date, status, snapshot) {
   if (rates.USD !== 1 || Object.keys(rates).length > 200 || !PROVIDERS[id].required.every(code => Object.hasOwn(rates, code))) {
     throw new RateError('invalid-publication', 'Missing required rates');
   }
-  return { ...failure, ok: true, rateDate: snapshot.rateDate, rates };
+  const metadata = cleanRateMetadata(snapshot, rates, date);
+  if (version === 1) {
+    // Legacy clients know one date only. Do not mislabel periodic quotes as daily.
+    for (const code of Object.keys(rates)) if (metadata.rateDates[code] !== snapshot.rateDate || metadata.frequencies[code] !== 'daily') delete rates[code];
+    return { ...failure, ok: true, rateDate: snapshot.rateDate, rates };
+  }
+  if (version !== 2) throw new Error('Unsupported publication version');
+  for (const code of Object.keys(rates)) {
+    if (SUPPORTED_CURRENCIES.includes(code)) continue;
+    delete rates[code];
+    delete metadata.rateDates[code];
+    delete metadata.frequencies[code];
+  }
+  return { ...failure, ok: true, rateDate: snapshot.rateDate, rates, ...metadata };
 }
 
 export async function preparePublication({ date, dataDir, outputDir }) {
@@ -61,6 +75,7 @@ export async function preparePublication({ date, dataDir, outputDir }) {
       const snapshot = status?.ok ? await readJson(path.join(source, 'banks', id, day + '.json')) : null;
       const envelope = publicEnvelope(id, day, status, snapshot);
       await atomicJson(path.join(target, 'v1', id, day + '.json'), envelope);
+      await atomicJson(path.join(target, 'v2', id, day + '.json'), publicEnvelope(id, day, status, snapshot, 2));
       coverage[id][envelope.ok ? 'ok' : 'unavailable']++;
     }
   }

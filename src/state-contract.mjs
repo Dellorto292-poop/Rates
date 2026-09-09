@@ -1,5 +1,5 @@
 // Standard-library-only contract, also used by the write-privileged checkpoint job.
-export const BANK_CURRENCIES = Object.freeze({ CBA: ['AMD', 'EUR'], NBRB: ['BYN', 'EUR'], NBG: ['GEL', 'EUR'], NBK: ['KZT', 'EUR'], NBKR: ['KGS', 'EUR'], ECB: ['EUR'], BOM: ['MNT', 'EUR'], CBR: ['RUB', 'EUR'], CBU: ['UZS', 'AZN', 'EUR'] });
+export const BANK_CURRENCIES = Object.freeze({ CBAR: ['AZN', 'EUR'], CBA: ['AMD', 'EUR'], NBRB: ['BYN', 'EUR'], NBG: ['GEL', 'EUR'], NBK: ['KZT', 'EUR'], NBKR: ['KGS', 'EUR'], ECB: ['EUR'], BOM: ['MNT', 'EUR'], CBR: ['RUB', 'EUR'], CBU: ['UZS', 'AZN', 'EUR'] });
 export function day(value) {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) throw new Error('Invalid date');
   const parsed = new Date(value + 'T00:00:00Z');
@@ -25,7 +25,10 @@ export function cleanSnapshot(value, bank, date) {
     rates[code] = rate;
   }
   if (Object.keys(rates).length > 200 || rates.USD !== 1 || !BANK_CURRENCIES[bank].every(code => Object.hasOwn(rates, code))) throw new Error('Incomplete rates');
-  return { schemaVersion: 1, provider: bank, requestedDate: date, rateDate: value.rateDate, fetchedAt: value.fetchedAt, base: 'USD', rates };
+  const metadata = cleanRateMetadata(value, rates, date);
+  const coverageVersion = value.coverageVersion ?? 1;
+  if (!Number.isSafeInteger(coverageVersion) || coverageVersion < 1 || coverageVersion > 100) throw new Error('Invalid coverage version');
+  return { schemaVersion: 1, provider: bank, requestedDate: date, rateDate: value.rateDate, fetchedAt: value.fetchedAt, base: 'USD', rates, ...metadata, coverageVersion };
 }
 export function cleanStatus(value, bank, date) {
   identity(value, bank, date);
@@ -37,4 +40,23 @@ export function cleanStatus(value, bank, date) {
     result.fetchedAt = value.fetchedAt;
   } else result.error = 'collection-error';
   return result;
+}
+
+export function cleanRateMetadata(value, rates, requestedDate) {
+  const rateDates = {}, frequencies = {};
+  for (const field of ['rateDates', 'frequencies']) {
+    if (value[field] != null && (typeof value[field] !== 'object' || Array.isArray(value[field]) ||
+        Object.keys(value[field]).length !== Object.keys(rates).length || Object.keys(value[field]).some(code => !Object.hasOwn(rates, code)))) throw new Error('Invalid currency metadata');
+  }
+  for (const code of Object.keys(rates)) {
+    const date = value.rateDates == null ? value.rateDate : value.rateDates[code];
+    const frequency = value.frequencies == null ? 'daily' : value.frequencies[code];
+    if (day(date) > value.rateDate || date > requestedDate || !['daily', 'weekly', 'monthly'].includes(frequency)) throw new Error('Invalid currency date/frequency');
+    if (frequency === 'daily' && date !== value.rateDate ||
+        frequency === 'weekly' && Date.parse(requestedDate) - Date.parse(date) > 6 * 86400000 ||
+        frequency === 'monthly' && date !== requestedDate.slice(0, 7) + '-01') throw new Error('Expired or inconsistent currency date');
+    rateDates[code] = date;
+    frequencies[code] = frequency;
+  }
+  return { rateDates, frequencies };
 }
