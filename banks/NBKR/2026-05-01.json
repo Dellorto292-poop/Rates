@@ -3,11 +3,43 @@
   "provider": "NBKR",
   "requestedDate": "2026-05-01",
   "rateDate": "2026-05-01",
-  "fetchedAt": "2026-09-08T13:47:06.847Z",
+  "fetchedAt": "2026-09-09T11:01:18.971Z",
   "base": "USD",
   "rates": {
+    "AMD": 371.1965521633901,
+    "AZN": 1.700000777849945,
+    "BYN": 2.8230030483866804,
     "EUR": 0.85620080938035,
+    "GEL": 2.6919985711734236,
     "KGS": 87.4205,
+    "KZT": 462.787188988883,
+    "MNT": 3582.80737704918,
+    "RUB": 74.91045415595545,
     "USD": 1
-  }
+  },
+  "rateDates": {
+    "AMD": "2026-05-01",
+    "AZN": "2026-05-01",
+    "BYN": "2026-05-01",
+    "EUR": "2026-05-01",
+    "GEL": "2026-05-01",
+    "KGS": "2026-05-01",
+    "KZT": "2026-05-01",
+    "MNT": "2026-05-01",
+    "RUB": "2026-05-01",
+    "USD": "2026-05-01"
+  },
+  "frequencies": {
+    "AMD": "weekly",
+    "AZN": "weekly",
+    "BYN": "weekly",
+    "EUR": "daily",
+    "GEL": "weekly",
+    "KGS": "daily",
+    "KZT": "daily",
+    "MNT": "weekly",
+    "RUB": "daily",
+    "USD": "daily"
+  },
+  "coverageVersion": 2
 }

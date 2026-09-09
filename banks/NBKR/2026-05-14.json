@@ -3,11 +3,28 @@
   "provider": "NBKR",
   "requestedDate": "2026-05-14",
   "rateDate": "2026-05-14",
-  "fetchedAt": "2026-09-08T13:46:56.125Z",
+  "fetchedAt": "2026-09-09T11:01:04.259Z",
   "base": "USD",
   "rates": {
     "EUR": 0.8544820490372055,
     "KGS": 87.45,
+    "KZT": 466.6488794023479,
+    "RUB": 73.66071428571429,
     "USD": 1
-  }
+  },
+  "rateDates": {
+    "EUR": "2026-05-14",
+    "KGS": "2026-05-14",
+    "KZT": "2026-05-14",
+    "RUB": "2026-05-14",
+    "USD": "2026-05-14"
+  },
+  "frequencies": {
+    "EUR": "daily",
+    "KGS": "daily",
+    "KZT": "daily",
+    "RUB": "daily",
+    "USD": "daily"
+  },
+  "coverageVersion": 2
 }

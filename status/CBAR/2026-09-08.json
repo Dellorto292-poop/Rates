@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "provider": "CBAR",
+  "requestedDate": "2026-09-08",
+  "attemptedAt": "2026-09-09T11:02:45.979Z",
+  "ok": false,
+  "error": "collection-error"
+}

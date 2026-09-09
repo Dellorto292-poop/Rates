@@ -3,10 +3,19 @@
   "provider": "ECB",
   "requestedDate": "2026-09-07",
   "rateDate": "2026-09-07",
-  "fetchedAt": "2026-09-09T08:58:30.108Z",
+  "fetchedAt": "2026-09-09T11:02:34.990Z",
   "base": "USD",
   "rates": {
     "EUR": 0.8604371020478404,
     "USD": 1
-  }
+  },
+  "rateDates": {
+    "EUR": "2026-09-07",
+    "USD": "2026-09-07"
+  },
+  "frequencies": {
+    "EUR": "daily",
+    "USD": "daily"
+  },
+  "coverageVersion": 1
 }

@@ -8,5 +8,14 @@
   "rates": {
     "EUR": 0.8595495960116899,
     "USD": 1
-  }
+  },
+  "rateDates": {
+    "EUR": "2026-05-26",
+    "USD": "2026-05-26"
+  },
+  "frequencies": {
+    "EUR": "daily",
+    "USD": "daily"
+  },
+  "coverageVersion": 1
 }
