@@ -51,11 +51,14 @@ export function createHttpClient({ fetchImpl = fetch, timeoutMs = 30000, maxByte
           reader.releaseLock();
         }
         const buffer = Buffer.concat(chunks);
-        const text = new TextDecoder(options.encoding || 'utf-8', { fatal: true }).decode(buffer);
+        let text;
+        try { text = new TextDecoder(options.encoding || 'utf-8', { fatal: true }).decode(buffer); }
+        catch { throw new RateError('invalid-encoding', 'Invalid bank response text encoding'); }
         return { text, url, sha256: createHash('sha256').update(buffer).digest('hex'), bytes: size };
       } catch (error) {
-        lastError = error instanceof RateError ? error : new RateError(controller.signal.aborted ? 'timeout' : 'network-error', 'Official bank request failed');
-        if (lastError.code === 'response-too-large' || /^http-4/.test(lastError.code) && lastError.code !== 'http-429') break;
+        const cause = /^[A-Z][A-Z0-9_]{0,63}$/.test(error.cause?.code || '') ? ' (' + error.cause.code + ')' : '';
+        lastError = error instanceof RateError ? error : new RateError(controller.signal.aborted ? 'timeout' : 'network-error', 'Official bank request failed' + cause);
+        if (['response-too-large', 'invalid-encoding'].includes(lastError.code) || /^http-4/.test(lastError.code) && lastError.code !== 'http-429') break;
       } finally {
         clearTimeout(timeout);
       }

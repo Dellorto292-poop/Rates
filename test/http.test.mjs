@@ -35,3 +35,7 @@ test('timeout remains active while the response body stalls',async()=>{
   const client=createHttpClient({timeoutMs:20,attempts:1,fetchImpl:async(_url,{signal})=>new Response(new ReadableStream({start(controller){signal.addEventListener('abort',()=>controller.error(new Error('aborted')))}}))});
   await assert.rejects(client.request(url),{code:'timeout'});
 });
+test('malformed text is not classified as a retryable connection error',async()=>{
+ let calls=0;const client=createHttpClient({fetchImpl:async()=>{calls++;return new Response(new Uint8Array([0xff]));}});
+ await assert.rejects(client.request(url),{code:'invalid-encoding'});assert.equal(calls,1);
+});
