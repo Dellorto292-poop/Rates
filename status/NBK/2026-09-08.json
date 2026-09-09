@@ -2,8 +2,7 @@
   "schemaVersion": 1,
   "provider": "NBK",
   "requestedDate": "2026-09-08",
-  "attemptedAt": "2026-09-09T16:37:12.430Z",
-  "ok": true,
-  "rateDate": "2026-09-08",
-  "fetchedAt": "2026-09-09T16:37:13.566Z"
+  "attemptedAt": "2026-09-09T20:58:04.325Z",
+  "ok": false,
+  "error": "collection-error"
 }
