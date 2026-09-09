@@ -1,5 +1,11 @@
 name: Bank source smoke test
 on:
+  pull_request:
+    paths:
+      - src/providers.mjs
+      - src/model.mjs
+      - src/http.mjs
+      - .github/workflows/bank-smoke.yml
   workflow_dispatch:
     inputs:
       date:
@@ -27,7 +33,7 @@ jobs:
         env:
           REQUEST_DATE: ${{ inputs.date }}
           BANK_IDS: ${{ inputs.providers }}
-        run: node src/cli.mjs --date "$REQUEST_DATE" --providers "$BANK_IDS" --output smoke-data
+        run: node src/cli.mjs --date "${REQUEST_DATE:-$(date -u +%F)}" --providers "${BANK_IDS:-CBAR,ECB,NBKR,NBRB}" --output smoke-data
       - uses: actions/upload-artifact@v4
         if: always()
         with:
