@@ -46,3 +46,5 @@ Review source coverage **at least every six months**. Last source review: **2026
 5. Run `npm test`, the manual **Bank source smoke test**, and **Update Rates**; check collection, checkpoint, deployment, and `bank-health`, then inspect both API versions.
 
 `npm run collect -- --date YYYY-MM-DD --providers CBAR,NBKR --output /path/to/data` runs a bounded collection. Scheduled production updates keep sanitized state on `codex/rates-data`; raw source observations/URLs never enter the public response. Publishing and state persistence use separate least-privilege jobs.
+
+A production update performs one delayed retry pass for residual transport failures (network, timeout, HTTP 429/5xx), at most ten bank/date pairs, newest first. Schema/date/encoding errors are not retried by this pass. Final status reflects the latest real attempt; unresolved failures remain explicit and fail `bank-health`. This accommodates intermittent CBAR connection failures without replacing banks, dates, or failed data with an older snapshot.
