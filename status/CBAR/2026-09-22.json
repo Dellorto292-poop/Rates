@@ -2,8 +2,7 @@
   "schemaVersion": 1,
   "provider": "CBAR",
   "requestedDate": "2026-09-22",
-  "attemptedAt": "2026-09-24T11:41:36.440Z",
-  "ok": true,
-  "rateDate": "2026-09-22",
-  "fetchedAt": "2026-09-24T11:41:37.862Z"
+  "attemptedAt": "2026-09-24T17:10:10.006Z",
+  "ok": false,
+  "error": "collection-error"
 }
