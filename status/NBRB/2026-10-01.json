@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "provider": "NBRB",
-  "requestedDate": "2026-09-29",
-  "attemptedAt": "2026-10-01T05:50:59.162Z",
+  "requestedDate": "2026-10-01",
+  "attemptedAt": "2026-10-01T05:50:16.182Z",
   "ok": false,
   "error": "collection-error"
 }
