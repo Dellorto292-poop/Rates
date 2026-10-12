@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "provider": "CBU",
-  "requestedDate": "2026-10-11",
+  "requestedDate": "2026-10-12",
   "rateDate": "2026-10-10",
-  "fetchedAt": "2026-10-11T21:57:02.194Z",
+  "fetchedAt": "2026-10-12T05:54:19.419Z",
   "base": "USD",
   "rates": {
     "AMD": 362.96217205613175,
