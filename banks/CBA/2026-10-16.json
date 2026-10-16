@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "provider": "CBA",
+  "requestedDate": "2026-10-16",
+  "rateDate": "2026-10-15",
+  "fetchedAt": "2026-10-16T04:28:45.927Z",
+  "base": "USD",
+  "rates": {
+    "AMD": 361.49,
+    "BYN": 3.0114128623792067,
+    "EUR": 0.891665227794085,
+    "GEL": 2.596537853756644,
+    "KGS": 87.47489413188143,
+    "KZT": 453.0517608722897,
+    "RUB": 83.94055497503774,
+    "USD": 1,
+    "UZS": 12010.033555932092
+  },
+  "rateDates": {
+    "AMD": "2026-10-15",
+    "BYN": "2026-10-15",
+    "EUR": "2026-10-15",
+    "GEL": "2026-10-15",
+    "KGS": "2026-10-15",
+    "KZT": "2026-10-15",
+    "RUB": "2026-10-15",
+    "USD": "2026-10-15",
+    "UZS": "2026-10-15"
+  },
+  "frequencies": {
+    "AMD": "daily",
+    "BYN": "daily",
+    "EUR": "daily",
+    "GEL": "daily",
+    "KGS": "daily",
+    "KZT": "daily",
+    "RUB": "daily",
+    "USD": "daily",
+    "UZS": "daily"
+  },
+  "coverageVersion": 1
+}
