@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "provider": "CBAR",
-  "requestedDate": "2026-10-17",
+  "requestedDate": "2026-10-18",
   "rateDate": "2026-10-16",
-  "fetchedAt": "2026-10-17T20:34:48.956Z",
+  "fetchedAt": "2026-10-18T04:29:22.416Z",
   "base": "USD",
   "rates": {
     "AZN": 1.7,
