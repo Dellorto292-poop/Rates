@@ -16,9 +16,9 @@ test('recent success supersedes a failed backfill attempt without another retry'
  assert.deepEqual(result,{ok:true,retried:0});
 });
 test('persistent transport failure and schema failures remain failed',async()=>{
- for(const error of ['network-error','timeout','http-429','http-503','invalid-xml','invalid-encoding','stale-response','invalid-number','http-404']){
+ for(const error of ['network-error','timeout','http-redirect','http-429','http-503','invalid-xml','invalid-encoding','stale-response','invalid-number','http-404']){
   let calls=0;const result=await update({date,outputDir:'unused',historyImpl:async()=>{},sleep:async()=>{},collectImpl:async()=>{calls++;return{results:[bad('CBAR',error)]};}});
-  assert.equal(result.ok,false); assert.equal(calls,['network-error','timeout','http-429','http-503'].includes(error)?6:3);
+  assert.equal(result.ok,false); assert.equal(calls,['network-error','timeout','http-redirect','http-429','http-503'].includes(error)?6:3);
  }
 });
 test('a large archive outage cannot trigger unbounded retry requests',async()=>{

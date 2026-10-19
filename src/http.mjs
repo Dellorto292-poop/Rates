@@ -27,8 +27,12 @@ export function createHttpClient({ fetchImpl = fetch, timeoutMs = 30000, maxByte
         const response = await fetchImpl(url, {
           method: options.method || 'GET', body: options.body,
           headers: { Accept: '*/*', 'User-Agent': 'Rates/0.1', ...options.headers },
-          credentials: 'omit', redirect: 'error', signal: controller.signal
+          credentials: 'omit', redirect: 'manual', signal: controller.signal
         });
+        if ([301, 302, 303, 307, 308].includes(response.status)) {
+          await response.body?.cancel();
+          throw new RateError('http-redirect', 'Bank returned HTTP ' + response.status + ' redirect instead of rates (' + new URL(url).hostname + '); redirect was not followed');
+        }
         if (!response.ok) {
           await response.body?.cancel();
           throw new RateError('http-' + response.status, 'Bank returned HTTP ' + response.status);

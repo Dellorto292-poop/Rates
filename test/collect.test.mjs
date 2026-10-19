@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { collect } from '../src/collect.mjs';
 import { observation, RateError } from '../src/model.mjs';
+import { createHttpClient } from '../src/http.mjs';
 
 const today='2026-09-08';
 const now=()=>today+'T15:00:00Z';
@@ -26,6 +27,29 @@ test('one bank failure preserves saved rates and other banks continue',async()=>
     assert.equal(await readFile(file,'utf8'),old);
     const status=JSON.parse(await readFile(path.join(dir,'status/BOM/'+today+'.json'),'utf8'));
     assert.equal(status.error,'timeout');
+  }finally{await cleanup(dir)}
+});
+
+test('NBG redirect diagnostics reach collection logs and status while saved rates remain intact',async()=>{
+  const dir=await mkdtemp(path.join(tmpdir(),'fx-test-'));
+  try{
+    const options={date:today,providers:['NBG'],outputDir:dir,now};
+    await collect({...options,fetchBank:bank});
+    const file=path.join(dir,'banks/NBG/'+today+'.json');
+    const old=await readFile(file,'utf8');
+    const logged=[];
+    const client=createHttpClient({sleep:async()=>{},fetchImpl:async()=>new Response('',{status:307,headers:{Location:'https://nbg.gov.ge/'}})});
+    const report=await collect({...options,client,onResult:row=>logged.push(JSON.parse(JSON.stringify(row)))});
+    const failure=report.results[0];
+    assert.equal(failure.ok,false);
+    assert.equal(failure.provider,'NBG');
+    assert.equal(failure.error,'http-redirect');
+    assert.equal(failure.message,'Bank returned HTTP 307 redirect instead of rates (nbg.gov.ge); redirect was not followed');
+    assert.deepEqual(logged,[failure]);
+    const status=JSON.parse(await readFile(path.join(dir,'status/NBG/'+today+'.json'),'utf8'));
+    assert.equal(status.error,failure.error);
+    assert.equal(status.message,failure.message);
+    assert.equal(await readFile(file,'utf8'),old);
   }finally{await cleanup(dir)}
 });
 test('historical collection does not roll latest backwards; stale replacement is rejected',async()=>{

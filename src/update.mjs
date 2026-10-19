@@ -2,7 +2,7 @@ import { collect } from './collect.mjs';
 import { collectHistory } from './history.mjs';
 import { isoDate, shiftDate } from './model.mjs';
 
-const transient = code => ['network-error', 'timeout', 'http-429'].includes(code) || /^http-5\d\d$/.test(code || '');
+const transient = code => ['network-error', 'timeout', 'http-redirect', 'http-429'].includes(code) || /^http-5\d\d$/.test(code || '');
 
 export async function update({ date, outputDir, backfill = false, onResult = () => {}, collectImpl = collect, historyImpl = collectHistory, sleep = ms => new Promise(resolve => setTimeout(resolve, ms)) }) {
   date = isoDate(date);
