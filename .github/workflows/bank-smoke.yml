@@ -29,6 +29,19 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm test
+      - name: Probe CBAR DNS, TCP and TLS
+        if: github.event_name == 'workflow_dispatch' && inputs.providers == 'CBAR'
+        continue-on-error: true
+        env:
+          REQUEST_DATE: ${{ inputs.date }}
+        run: |
+          node scripts/probe-cbar.mjs "$REQUEST_DATE" &
+          probe_pid=$!
+          for host in www.cbar.az cbar.az; do
+            curl --proto '=https' --connect-timeout 40 --max-time 45 --silent --show-error --output /dev/null --write-out "host=$host http=%{http_code} dns=%{time_namelookup}s tcp=%{time_connect}s tls=%{time_appconnect}s total=%{time_total}s\n" "https://$host/currencies/$(date -d "$REQUEST_DATE" +%d.%m.%Y).xml" &
+          done
+          wait "$probe_pid" || true
+          wait || true
       - name: Collect official data
         env:
           REQUEST_DATE: ${{ inputs.date }}
