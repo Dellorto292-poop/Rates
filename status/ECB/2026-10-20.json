@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "provider": "ECB",
   "requestedDate": "2026-10-20",
-  "attemptedAt": "2026-10-20T11:33:29.826Z",
+  "attemptedAt": "2026-10-20T17:02:12.486Z",
   "ok": true,
-  "rateDate": "2026-10-19",
-  "fetchedAt": "2026-10-20T11:33:30.449Z"
+  "rateDate": "2026-10-20",
+  "fetchedAt": "2026-10-20T17:02:13.139Z"
 }
