@@ -23,7 +23,11 @@ for (const spec of Object.values(PROVIDERS)) {
 
 function xml(text) {
   if (/<!DOCTYPE|<!ENTITY/i.test(text) || XMLValidator.validate(text) !== true) {
-    throw new RateError('invalid-xml', 'Invalid or unsafe bank XML');
+    const html = /<html(?:\s|>)/i.test(text);
+    const message = html && /Request Rejected/i.test(text)
+      ? 'Bank returned a Request Rejected HTML page instead of rate XML'
+      : html ? 'Bank returned HTML instead of rate XML' : 'Invalid or unsafe bank XML';
+    throw new RateError('invalid-xml', message);
   }
   return new XMLParser({ ignoreAttributes: false, removeNSPrefix: true, parseTagValue: false, processEntities: false }).parse(text);
 }

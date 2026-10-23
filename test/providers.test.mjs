@@ -56,3 +56,10 @@ test('empty daily publications walk backwards but network errors do not become h
   await assert.rejects(fetchProvider('CBU',date,{request:async()=>{attempts++;throw new Error('network')}}));
   assert.equal(attempts,1);
 });
+
+test('bank HTML rejection is diagnosed without accepting it as XML or logging response content', () => {
+  const html = '<!DOCTYPE html><html><head><title>Request Rejected</title></head><body>Support ID: private-reference</body></html>';
+  assert.throws(() => parseProvider('CBAR', html), {
+    code: 'invalid-xml', message: 'Bank returned a Request Rejected HTML page instead of rate XML'
+  });
+});

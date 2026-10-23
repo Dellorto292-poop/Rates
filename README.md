@@ -1,6 +1,6 @@
 # Rates
 
-Official central-bank exchange rates, normalized as **currency units per 1 USD**. No commercial FX aggregator and no silent substitution between banks.
+Official central-bank exchange rates, normalized as **currency units per 1 USD**. Rates uses no commercial FX aggregator and does not substitute one bank for another.
 
 Supported banks: CBAR (Azerbaijan), CBA (Armenia), NBRB (Belarus), NBG (Georgia), NBK (Kazakhstan), NBKR (Kyrgyzstan), ECB, BOM (Mongolia), CBR (Russia), CBU (Uzbekistan).
 
@@ -10,7 +10,7 @@ Supported banks: CBAR (Azerbaijan), CBA (Armenia), NBRB (Belarus), NBG (Georgia)
 
 Successful responses contain `schemaVersion: 2`, `provider`, `requestedDate`, `checkedAt`, `ok: true`, `rateDate`, `rates`, `rateDates`, and `frequencies`. The last three are maps keyed by currency. `rateDate` is the primary daily publication date; use **`rateDates[currency]`** for the selected currency. `frequencies[currency]` is `daily`, `weekly`, or `monthly`. `requestedDate` is a lookup date, never proof that a quote was established that day. `checkedAt` is collection time.
 
-An unavailable bank/date returns `ok: false` without rates. A missing currency is unavailable from that bank; clients must not silently substitute another bank. The rolling archive covers six calendar months.
+An unavailable bank/date returns `ok: false` without rates. `/v2/{BANK}/latest.json` separately exposes the last validated snapshot in the rolling archive, including when a later refresh failed. Its `requestedDate`, `rateDate`, currency dates and successful collection time remain unchanged; `checkedAt` is that snapshot's `fetchedAt`. Clients must validate the selected currency and its periodic validity against their own request date. The endpoint is absent when no validated snapshot exists. Dated responses and `bank-health` continue to report failed collections. A missing currency is unavailable from that bank. A client may select another bank, but must preserve and display the actual bank and currency date. Rates publishes each bank separately and does not perform this selection. The rolling archive covers six calendar months.
 
 `/v1/` retains its previous strict JSON shape and only daily quotes from its one stated date, for existing clients. `/v2/` adds periodic coverage without mislabeling it in older applications.
 
@@ -47,6 +47,6 @@ Review source coverage **at least every six months**. Last source review: **2026
 
 `npm run collect -- --date YYYY-MM-DD --providers CBAR,NBKR --output /path/to/data` runs a bounded collection. Scheduled production updates keep sanitized state on `codex/rates-data`; raw source observations/URLs never enter the public response. Publishing and state persistence use separate least-privilege jobs.
 
-A production update performs one delayed retry pass for residual transport failures (network, timeout, HTTP redirects, HTTP 429/5xx), at most ten bank/date pairs, newest first. Schema/date/encoding errors are not retried by this pass. Final status reflects the latest real attempt; unresolved failures remain explicit and fail `bank-health`. This accommodates intermittent CBAR connection failures without replacing banks, dates, or failed data with an older snapshot.
+A production update performs one delayed retry pass for residual transport failures (network, timeout, HTTP redirects, HTTP 429/5xx), at most ten bank/date pairs, newest first. Schema/date/encoding errors are not retried by this pass. Final status reflects the latest real attempt; unresolved failures remain explicit and fail `bank-health`. This accommodates intermittent CBAR connection failures. The separate `latest.json` endpoint keeps verified data available without changing dated failure responses or hiding collection failures.
 
 The collection log reports bank redirects as `http-redirect` with their HTTP status and the requested bank host. For example, an NBG HTTP 307 response is reported as `Bank returned HTTP 307 redirect instead of rates (nbg.gov.ge); redirect was not followed`. A redirect alone does not establish why the bank sent it. The collector does not follow redirects or log their destination, cookies, or response body. These details stay out of the public API and sanitized checkpoint.

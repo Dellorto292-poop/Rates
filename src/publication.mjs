@@ -1,4 +1,4 @@
-import { cleanRateMetadata } from './state-contract.mjs';
+import { cleanRateMetadata, cleanSnapshot } from './state-contract.mjs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { atomicJson } from './collect.mjs';
@@ -70,14 +70,23 @@ export async function preparePublication({ date, dataDir, outputDir }) {
   const coverage = {};
   for (const id of Object.keys(PROVIDERS)) {
     coverage[id] = { ok: 0, unavailable: 0 };
+    let latest;
     for (let day = startDate; day <= date; day = shiftDate(day, 1)) {
       const status = await readJson(path.join(source, 'status', id, day + '.json'));
-      const snapshot = status?.ok ? await readJson(path.join(source, 'banks', id, day + '.json')) : null;
+      const rawSnapshot = await readJson(path.join(source, 'banks', id, day + '.json'));
+      const snapshot = rawSnapshot ? cleanSnapshot(rawSnapshot, id, day) : null;
+      if (snapshot && (!latest || snapshot.rateDate >= latest.rateDate)) latest = snapshot;
       const envelope = publicEnvelope(id, day, status, snapshot);
       await atomicJson(path.join(target, 'v1', id, day + '.json'), envelope);
       await atomicJson(path.join(target, 'v2', id, day + '.json'), publicEnvelope(id, day, status, snapshot, 2));
       coverage[id][envelope.ok ? 'ok' : 'unavailable']++;
     }
+    // Keep collection health separate from the last verified bank publication.
+    // Its original lookup date and successful collection time remain unchanged.
+    if (latest) await atomicJson(path.join(target, 'v2', id, 'latest.json'), publicEnvelope(id, latest.requestedDate, {
+      schemaVersion: 1, provider: id, requestedDate: latest.requestedDate, ok: true,
+      attemptedAt: latest.fetchedAt, fetchedAt: latest.fetchedAt, rateDate: latest.rateDate
+    }, latest, 2));
   }
   const manifest = { schemaVersion: 1, startDate, endDate: date, coverage };
   await atomicJson(path.join(target, 'manifest.json'), manifest);
