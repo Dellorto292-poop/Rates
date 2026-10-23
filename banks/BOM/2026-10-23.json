@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "provider": "BOM",
+  "requestedDate": "2026-10-23",
+  "rateDate": "2026-10-22",
+  "fetchedAt": "2026-10-23T04:47:32.896Z",
+  "base": "USD",
+  "rates": {
+    "EUR": 0.8901149732355764,
+    "KZT": 448.6845386533666,
+    "MNT": 3598.45,
+    "RUB": 81.15584122688317,
+    "USD": 1
+  },
+  "rateDates": {
+    "EUR": "2026-10-22",
+    "KZT": "2026-10-22",
+    "MNT": "2026-10-22",
+    "RUB": "2026-10-22",
+    "USD": "2026-10-22"
+  },
+  "frequencies": {
+    "EUR": "daily",
+    "KZT": "daily",
+    "MNT": "daily",
+    "RUB": "daily",
+    "USD": "daily"
+  },
+  "coverageVersion": 1
+}
