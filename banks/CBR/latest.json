@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "provider": "CBR",
-  "requestedDate": "2026-10-24",
+  "requestedDate": "2026-10-25",
   "rateDate": "2026-10-24",
-  "fetchedAt": "2026-10-24T20:47:22.503Z",
+  "fetchedAt": "2026-10-25T04:39:53.987Z",
   "base": "USD",
   "rates": {
     "AMD": 361.1395850428903,
