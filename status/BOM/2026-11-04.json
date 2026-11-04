@@ -2,8 +2,7 @@
   "schemaVersion": 1,
   "provider": "BOM",
   "requestedDate": "2026-11-04",
-  "attemptedAt": "2026-11-04T14:35:35.892Z",
-  "ok": true,
-  "rateDate": "2026-11-04",
-  "fetchedAt": "2026-11-04T14:35:39.865Z"
+  "attemptedAt": "2026-11-04T23:47:41.103Z",
+  "ok": false,
+  "error": "collection-error"
 }
