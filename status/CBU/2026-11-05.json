@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "provider": "CBU",
+  "requestedDate": "2026-11-05",
+  "attemptedAt": "2026-11-05T06:48:19.872Z",
+  "ok": false,
+  "error": "collection-error"
+}
