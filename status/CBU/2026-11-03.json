@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "provider": "CBU",
   "requestedDate": "2026-11-03",
-  "attemptedAt": "2026-11-06T06:45:30.874Z",
-  "ok": false,
-  "error": "collection-error"
+  "attemptedAt": "2026-11-06T19:21:11.476Z",
+  "ok": true,
+  "rateDate": "2026-11-03",
+  "fetchedAt": "2026-11-06T19:21:12.551Z"
 }
