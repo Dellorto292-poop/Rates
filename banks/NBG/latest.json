@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "provider": "NBG",
-  "requestedDate": "2026-11-08",
+  "requestedDate": "2026-11-09",
   "rateDate": "2026-11-07",
-  "fetchedAt": "2026-11-08T22:00:58.069Z",
+  "fetchedAt": "2026-11-09T06:21:07.058Z",
   "base": "USD",
   "rates": {
     "AMD": 360.49790917047557,
