@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "provider": "NBG",
+  "requestedDate": "2026-11-10",
+  "rateDate": "2026-11-10",
+  "fetchedAt": "2026-11-10T19:42:32.301Z",
+  "base": "USD",
+  "rates": {
+    "AMD": 361.0013358566181,
+    "AZN": 1.69995413144617,
+    "BYN": 2.9884805897938027,
+    "EUR": 0.8933232326710513,
+    "GEL": 2.5943,
+    "KGS": 87.45027978156813,
+    "KZT": 448.60798893307975,
+    "RUB": 82.40058442383433,
+    "USD": 1,
+    "UZS": 11988.447319778188
+  },
+  "rateDates": {
+    "AMD": "2026-11-10",
+    "AZN": "2026-11-10",
+    "BYN": "2026-11-10",
+    "EUR": "2026-11-10",
+    "GEL": "2026-11-10",
+    "KGS": "2026-11-10",
+    "KZT": "2026-11-10",
+    "RUB": "2026-11-10",
+    "USD": "2026-11-10",
+    "UZS": "2026-11-10"
+  },
+  "frequencies": {
+    "AMD": "daily",
+    "AZN": "daily",
+    "BYN": "daily",
+    "EUR": "daily",
+    "GEL": "daily",
+    "KGS": "daily",
+    "KZT": "daily",
+    "RUB": "daily",
+    "USD": "daily",
+    "UZS": "daily"
+  },
+  "coverageVersion": 1
+}
