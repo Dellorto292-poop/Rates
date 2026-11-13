@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "provider": "BOM",
-  "requestedDate": "2026-11-12",
+  "requestedDate": "2026-11-13",
   "rateDate": "2026-11-12",
-  "fetchedAt": "2026-11-12T23:36:24.158Z",
+  "fetchedAt": "2026-11-13T06:40:57.086Z",
   "base": "USD",
   "rates": {
     "EUR": 0.9020788526876362,
