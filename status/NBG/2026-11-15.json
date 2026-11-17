@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "provider": "NBG",
   "requestedDate": "2026-11-15",
-  "attemptedAt": "2026-11-17T07:52:17.512Z",
-  "ok": false,
-  "error": "collection-error"
+  "attemptedAt": "2026-11-17T20:51:46.737Z",
+  "ok": true,
+  "rateDate": "2026-11-14",
+  "fetchedAt": "2026-11-17T20:51:48.190Z"
 }
