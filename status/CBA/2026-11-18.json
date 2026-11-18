@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "provider": "CBA",
+  "requestedDate": "2026-11-18",
+  "attemptedAt": "2026-11-18T07:24:48.235Z",
+  "ok": false,
+  "error": "collection-error"
+}
