@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "provider": "CBA",
   "requestedDate": "2026-11-16",
-  "attemptedAt": "2026-11-18T07:25:24.766Z",
-  "ok": false,
-  "error": "collection-error"
+  "attemptedAt": "2026-11-18T20:28:03.039Z",
+  "ok": true,
+  "rateDate": "2026-11-16",
+  "fetchedAt": "2026-11-18T20:28:04.977Z"
 }
