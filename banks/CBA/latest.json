@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "provider": "CBA",
-  "requestedDate": "2026-11-21",
+  "requestedDate": "2026-11-22",
   "rateDate": "2026-11-20",
-  "fetchedAt": "2026-11-21T19:11:39.058Z",
+  "fetchedAt": "2026-11-22T06:42:29.808Z",
   "base": "USD",
   "rates": {
     "AMD": 360.53,
