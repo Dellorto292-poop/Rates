@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "provider": "CBAR",
+  "requestedDate": "2026-11-23",
+  "rateDate": "2026-11-23",
+  "fetchedAt": "2026-11-23T07:31:29.359Z",
+  "base": "USD",
+  "rates": {
+    "AZN": 1.7,
+    "BYN": 2.9919042590637095,
+    "EUR": 0.9106004606567036,
+    "GEL": 2.589095339628389,
+    "KGS": 87.62886597938144,
+    "KZT": 455.51982851018226,
+    "RUB": 81.69542025085299,
+    "USD": 1,
+    "UZS": 12056.737588652482
+  },
+  "rateDates": {
+    "AZN": "2026-11-23",
+    "BYN": "2026-11-23",
+    "EUR": "2026-11-23",
+    "GEL": "2026-11-23",
+    "KGS": "2026-11-23",
+    "KZT": "2026-11-23",
+    "RUB": "2026-11-23",
+    "USD": "2026-11-23",
+    "UZS": "2026-11-23"
+  },
+  "frequencies": {
+    "AZN": "daily",
+    "BYN": "daily",
+    "EUR": "daily",
+    "GEL": "daily",
+    "KGS": "daily",
+    "KZT": "daily",
+    "RUB": "daily",
+    "USD": "daily",
+    "UZS": "daily"
+  },
+  "coverageVersion": 1
+}
