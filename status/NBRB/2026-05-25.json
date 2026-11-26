@@ -1,9 +1,0 @@
-{
-  "schemaVersion": 1,
-  "provider": "NBRB",
-  "requestedDate": "2026-05-25",
-  "attemptedAt": "2026-09-09T11:00:51.968Z",
-  "ok": true,
-  "rateDate": "2026-05-25",
-  "fetchedAt": "2026-09-09T11:00:52.235Z"
-}

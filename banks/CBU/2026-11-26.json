@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "provider": "CBU",
+  "requestedDate": "2026-11-26",
+  "rateDate": "2026-11-26",
+  "fetchedAt": "2026-11-26T08:16:51.472Z",
+  "base": "USD",
+  "rates": {
+    "AMD": 360.53804511278196,
+    "AZN": 1.7,
+    "BYN": 3.0099982675026173,
+    "EUR": 0.9140768981490306,
+    "GEL": 2.591001439458452,
+    "KGS": 87.47730589608874,
+    "KZT": 458.0775697363393,
+    "MNT": 3610.8102409638554,
+    "RUB": 82.44199160993054,
+    "USD": 1,
+    "UZS": 11987.89
+  },
+  "rateDates": {
+    "AMD": "2026-11-26",
+    "AZN": "2026-11-26",
+    "BYN": "2026-11-26",
+    "EUR": "2026-11-26",
+    "GEL": "2026-11-26",
+    "KGS": "2026-11-26",
+    "KZT": "2026-11-26",
+    "MNT": "2026-11-26",
+    "RUB": "2026-11-26",
+    "USD": "2026-11-26",
+    "UZS": "2026-11-26"
+  },
+  "frequencies": {
+    "AMD": "daily",
+    "AZN": "daily",
+    "BYN": "daily",
+    "EUR": "daily",
+    "GEL": "daily",
+    "KGS": "daily",
+    "KZT": "daily",
+    "MNT": "daily",
+    "RUB": "daily",
+    "USD": "daily",
+    "UZS": "daily"
+  },
+  "coverageVersion": 1
+}

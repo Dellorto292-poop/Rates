@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
   "provider": "ECB",
-  "requestedDate": "2026-05-25",
-  "rateDate": "2026-05-25",
-  "fetchedAt": "2026-09-08T12:55:41.888Z",
+  "requestedDate": "2026-11-26",
+  "rateDate": "2026-11-25",
+  "fetchedAt": "2026-11-26T08:16:43.729Z",
   "base": "USD",
   "rates": {
-    "EUR": 0.8588851670531651,
+    "EUR": 0.9144947416552356,
     "USD": 1
   },
   "rateDates": {
-    "EUR": "2026-05-25",
-    "USD": "2026-05-25"
+    "EUR": "2026-11-25",
+    "USD": "2026-11-25"
   },
   "frequencies": {
     "EUR": "daily",
